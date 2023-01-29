@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImeWlConverterCore", "src\ImeWlConverterCore\ImeWlConverterCore.csproj", "{DA49CAB9-9723-4CA4-91FF-F722156C0558}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenshinDataParser", "src\GenshinDataParser\GenshinDataParser.csproj", "{D203084A-4038-4AFE-A408-6BDA1E04F136}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImeConverter", "src\ImeConverter\ImeConverter.csproj", "{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DA49CAB9-9723-4CA4-91FF-F722156C0558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA49CAB9-9723-4CA4-91FF-F722156C0558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA49CAB9-9723-4CA4-91FF-F722156C0558}.Debug|x86.ActiveCfg = Debug|x86
+		{DA49CAB9-9723-4CA4-91FF-F722156C0558}.Debug|x86.Build.0 = Debug|x86
+		{DA49CAB9-9723-4CA4-91FF-F722156C0558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA49CAB9-9723-4CA4-91FF-F722156C0558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA49CAB9-9723-4CA4-91FF-F722156C0558}.Release|x86.ActiveCfg = Release|x86
+		{DA49CAB9-9723-4CA4-91FF-F722156C0558}.Release|x86.Build.0 = Release|x86
+		{D203084A-4038-4AFE-A408-6BDA1E04F136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D203084A-4038-4AFE-A408-6BDA1E04F136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D203084A-4038-4AFE-A408-6BDA1E04F136}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D203084A-4038-4AFE-A408-6BDA1E04F136}.Debug|x86.Build.0 = Debug|Any CPU
+		{D203084A-4038-4AFE-A408-6BDA1E04F136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D203084A-4038-4AFE-A408-6BDA1E04F136}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D203084A-4038-4AFE-A408-6BDA1E04F136}.Release|x86.ActiveCfg = Release|Any CPU
+		{D203084A-4038-4AFE-A408-6BDA1E04F136}.Release|x86.Build.0 = Release|Any CPU
+		{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}.Debug|x86.Build.0 = Debug|Any CPU
+		{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}.Release|x86.ActiveCfg = Release|Any CPU
+		{9E3642A6-F6C2-4B3D-B13A-080F9249EA88}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D9AECF5-8625-43FC-B59A-47E550F80DD3}
+	EndGlobalSection
+EndGlobal

@@ -32,4 +32,5 @@ jobs:
 
     - name: Release
       uses: softprops/action-gh-release@v1
-      files: ./output/*
+      with:
+        files: ./output/*

@@ -28,9 +28,13 @@ jobs:
       run: dotnet build --no-restore -c Release -o ./tool
 
     - name: Converter
-      run: dotnet ./tool/ImeConverter.dll ./words ./output
+      run: dotnet ./tool/ImeConverter.dll ./words ./GenshinWords
+
+    - name: Compress
+      shell: pwsh
+      run:  Compress-Archive -Path ./GenshinWords -DestinationPath ./GenshinWords.zip -CompressionLevel Optimal -Force
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ./output/*
+        files: GenshinWords.zip

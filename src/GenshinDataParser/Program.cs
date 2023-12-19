@@ -34,13 +34,41 @@ var filePaths = Directory.GetFiles(Path.Join(settings.GenshinDataPath, "ExcelBin
 foreach (var filePath in filePaths)
 {
     var fileName = Path.GetFileName(filePath);
+
+    Console.WriteLine(fileName);
+    var baseNode = JsonNode.Parse(File.ReadAllText(filePath));
+
+    // full text
+    var fulltexts = new List<string>();
+    foreach (var node in (baseNode as JsonArray)!)
+    {
+        foreach (var kv in (node as JsonObject)!)
+        {
+            string? id = kv.Value?.ToString();
+            if (long.TryParse(id, out _))
+            {
+                var word = textmap[id]?.ToString();
+                if (!string.IsNullOrWhiteSpace(word))
+                {
+                    fulltexts.Add(word);
+                }
+            }
+        }
+    }
+    fulltexts = fulltexts.Distinct().ToList();
+    Console.WriteLine($"{fulltexts.Count} texts");
+    if (fulltexts.Any())
+    {
+        Directory.CreateDirectory(Path.Join(settings.OutputPath, "fulltext"));
+        File.WriteAllLines(Path.Join(settings.OutputPath, "fulltext", Path.ChangeExtension(fileName, ".txt")), fulltexts);
+    }
+
+    // words
+    var words = new List<string>();
     if (!settings.ConverterAll && !settings.ExcelBinOutputs.Contains(fileName))
     {
         continue;
     }
-    Console.WriteLine(fileName);
-    var baseNode = JsonNode.Parse(File.ReadAllText(filePath));
-    var words = new List<string>();
     foreach (var node in (baseNode as JsonArray)!)
     {
         foreach (var kv in (node as JsonObject)!)
@@ -51,7 +79,19 @@ foreach (var filePath in filePaths)
                 if (!string.IsNullOrWhiteSpace(hash))
                 {
                     var word = textmap[hash]?.ToString();
-                    if (!string.IsNullOrWhiteSpace(word) && !word.Contains("test") && !word.Contains("废弃") && !word.Contains("测试") && !word.Contains("$") && !word.Contains("%") && !word.Contains("/") && !word.Contains("#") && !word.Contains("{") && !word.Contains("\n") && !word.Contains("，") && !word.Contains("。"))
+                    if (!string.IsNullOrWhiteSpace(word)
+                        && !word.Contains("Test")
+                        && !word.Contains("test")
+                        && !word.Contains("废弃")
+                        && !word.Contains("测试")
+                        && !word.Contains("$")
+                        && !word.Contains("%")
+                        && !word.Contains("/")
+                        && !word.Contains("#")
+                        && !word.Contains("{")
+                        && !word.Contains("\n")
+                        && !word.Contains("，")
+                        && !word.Contains("。"))
                     {
                         words.Add(word);
                     }
@@ -63,8 +103,10 @@ foreach (var filePath in filePaths)
     Console.WriteLine($"{words.Count} words");
     if (words.Any())
     {
-        File.WriteAllText(Path.Join(settings.OutputPath, Path.ChangeExtension(fileName, ".txt")), string.Join(Environment.NewLine, words));
+        Directory.CreateDirectory(Path.Join(settings.OutputPath, "words"));
+        File.WriteAllLines(Path.Join(settings.OutputPath, "words", Path.ChangeExtension(fileName, ".txt")), words);
     }
+
 }
 
 

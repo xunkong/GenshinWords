@@ -1,0 +1,7 @@
+星变·游弋
+·天体能量提交点<color=#FFCC33FF>位置不定</color>\n·天体能量<color=#FFCC33FF>提交范围较小</color>
+星变·凶异
+·挑战中出现的<color=#FFCC33FF>魔物更加凶暴</color>\n·天体能量提交地点位于<color=#FFCC33FF>天降之星的正下方</color>
+星变·恶曜
+·能携带<color=#FFCC33FF>更多的天体能量</color>；提交被打断时，<color=#FFCC33FF>失去所有能量</color>\n·天体能量提交地点位于<color=#FFCC33FF>天降之星的正下方</color>
+星变·游弋·单人挑战

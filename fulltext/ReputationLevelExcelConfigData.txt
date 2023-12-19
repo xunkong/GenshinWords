@@ -1,0 +1,10 @@
+声望等级：<color=#FFCC33>1级</color>
+声望等级：<color=#FFCC33>2级</color>
+声望等级：<color=#FFCC33>3级</color>
+声望等级：<color=#FFCC33>4级</color>
+声望等级：<color=#FFCC33>5级</color>
+声望等级：<color=#FFCC33>6级</color>
+声望等级：<color=#FFCC33>7级</color>
+声望等级：<color=#FFCC33>8级</color>
+声望等级：<color=#FFCC33>9级</color>
+声望等级：<color=#FFCC33>10级</color>

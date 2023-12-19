@@ -1,0 +1,10 @@
+靠近<color=#37FFFF>{0}</color>以获得<color=#FFCC33>攻击力提升</color>效果
+靠近<color=#37FFFF>{0}</color>以获得<color=#FFCC33>提交能量效率提升</color>效果
+<color=#37FFFF>{0}</color> <color=#FF5E41>提交进程中断，失去了天体能量</color>
+<color=#FF5E41>{0}</color>捕获了<color=#37FFFF>{1}</color>
+<color=#FFCC33>「眷顾之能」</color>降临在<color=#FFCC33>「周旋之地」</color>的某处，拾取后将为<color=#FFCC33>「眷顾秘技」</color>充能…
+时间即将结束，猎手的移动速度大幅提升，<color=#FFCC33>「捕获！」</color>的冷却时间降低
+猎手<color=#FF5E41>{0}</color>获得了<color=#FFCC33>「眷顾之能」</color>！
+游侠<color=#37FFFF>{0}</color>获得了<color=#FFCC33>「眷顾之能」</color>！
+保持警惕，利用秘技识破伪装，捕获所有游侠！
+尽快找好隐藏地点，准备伪装，躲避猎手的追捕！

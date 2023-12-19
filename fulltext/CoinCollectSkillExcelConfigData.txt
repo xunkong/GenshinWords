@@ -1,0 +1,12 @@
+高跃助佑
+获得后一段时间内：\n提高角色的<color=#FFCC33FF>跳跃高度</color>\n\n充能速度：快
+寻风助佑
+获得后：\n在原地<color=#FFCC33FF>寻找到一个风场</color>\n\n充能速度：快
+取宝助佑
+获得后一段时间内：\n提高<color=#FFCC33FF>搜集「野踪气球」的范围</color>\n\n充能速度：快
+揽宝助佑
+获得后一段时间内：\n1.提高角色的<color=#FFCC33FF>移动速度</color>\n2.提高<color=#FFCC33FF>搜集「野踪气球」的范围</color>\n\n充能速度：慢
+搜宝助佑
+获得后一段时间内：\n1.提高角色的<color=#FFCC33FF>跳跃高度</color>\n2.提高<color=#FFCC33FF>搜集「野踪气球」的范围</color>\n\n充能速度：慢
+驰行助佑
+获得后一段时间内：\n1.提高角色的<color=#FFCC33FF>移动速度</color>\n2.大幅降低角色的<color=#FFCC33FF>耐力消耗</color>\n\n充能速度：快

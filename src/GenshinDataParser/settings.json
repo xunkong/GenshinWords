@@ -1,6 +1,6 @@
 ﻿{
-  "GenshinDataPath": "C:\\Users\\Scighost\\Source\\Repos\\GenshinData",
-  "OutputPath": "C:\\Users\\Scighost\\OneDrive\\Code\\GenshinWords\\words",
+  "GenshinDataPath": "D:\\Repos\\GenshinData",
+  "OutputPath": "D:\\Repos\\GenshinWords\\words",
   "ConverterAll": false,
   "ExcelBinOutputs": [
     "AchievementExcelConfigData.json",

@@ -1,27 +1,9 @@
-﻿/*
- *   Copyright © 2009-2020 studyzy(深蓝,曾毅)
-
- *   This program "IME WL Converter(深蓝词库转换)" is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
-
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
-
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-using ICSharpCode.SharpZipLib.Zip;
+﻿using ICSharpCode.SharpZipLib.Zip;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using UtfUnknown;
 
 namespace Studyzy.IMEWLConverter.Helpers
 {
@@ -41,8 +23,7 @@ namespace Studyzy.IMEWLConverter.Helpers
         /// <returns></returns>
         public static string AutoMatchSourceWLType(string filePath)
         {
-            
-            string ext = Path.GetExtension(filePath).ToLower();
+            string ext = Path.GetExtension(filePath);
             if (ext == ".scel")
             {
                 return ConstantString.SOUGOU_XIBAO_SCEL;
@@ -65,7 +46,7 @@ namespace Studyzy.IMEWLConverter.Helpers
             }
             if (ext == ".dat")
             {
-                return ConstantString.WIN10_MS_PINYIN;
+                return ConstantString.WIN10_MS_PINYIN_SELF_STUDY;
             }
             if (ext == ".bcd")
             {
@@ -87,16 +68,7 @@ namespace Studyzy.IMEWLConverter.Helpers
             {
                 return ConstantString.GBOARD;
             }
-            if (ext == ".mb")
-            {
-                return ConstantString.JIDIAN_MBDICT;
-            }
-            if (Directory.Exists(filePath))
-            {
-                return "";
-            }
-
-                string example = "";
+            string example = "";
             Encoding code = GetEncodingType(filePath);
             using (var sr = new StreamReader(filePath, code))
             {
@@ -284,21 +256,79 @@ namespace Studyzy.IMEWLConverter.Helpers
 
         public static Encoding GetEncodingType(string fileName)
         {
-            DetectionResult result = CharsetDetector.DetectFromFile(fileName);
-            DetectionDetail resultDetected = result.Detected;
-            if (resultDetected.Confidence < 0.7)
+            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            Encoding r = GetType(fs);
+            fs.Close();
+            return r;
+        }
+
+        private static Encoding GetType(FileStream fs)
+        {
+            using (var r = new BinaryReader(fs))
             {
-                try
+                byte[] ss = r.ReadBytes(3);
+
+                //编码类型 Coding=编码类型.ASCII;   
+                if (ss[0] >= 0xEF)
                 {
-                    return Encoding.GetEncoding("GB18030");
+                    if (ss[0] == 0xEF && ss[1] == 0xBB && ss[2] == 0xBF) // start of UTF-8 BOM
+                    {
+                        return Encoding.UTF8;
+                    }
+                    if (ss[0] == 0xFE && ss[1] == 0xFF) // UTF-16 BE BOM
+                    {
+                        return Encoding.BigEndianUnicode;
+                    }
+                    if (ss[0] == 0xFF && ss[1] == 0xFE) // Unicode BOM (UTF-16 LE or UTF-32 LE)
+                    {
+                        return Encoding.Unicode;
+                    }
+                    return IsUtf8OrGb18030(fs);
                 }
-                catch
-                {
-                    return Encoding.GetEncoding("GB2312");
-                }
+                return IsUtf8OrGb18030(fs);
             }
-            Encoding encoding = resultDetected.Encoding;
-            return encoding;
+        }
+
+        /// <summary>
+        ///     判断是UTF8（无BOM）还是GB18030
+        ///     1. 如果第1位是0就不需要判断的，一定是ASCII字符。
+        ///     2. 如果第1位是1开头的，第2位是0开头的，一定是GB编码。
+        ///     3. 如果第1位是非1110开头的，则一定是GB编码。
+        ///     4. 多做几个汉字判断。
+        /// </summary>
+        /// <param name="fs"></param>
+        /// <returns></returns>
+        private static Encoding IsUtf8OrGb18030(FileStream fs)
+        {
+            fs.Position = 0;
+            do
+            {
+                int b = fs.ReadByte();
+                if (b == -1) //不知道
+                {
+                    return Encoding.Default;
+                }
+                if (b < 0x80) // ASCII character.  
+                {
+                    continue;
+                }
+                var s = (byte) b;
+                var s1 = (byte) fs.ReadByte();
+                //byte s2 = (byte) fs.ReadByte();
+                if (s1 < 0x80 || (s < 0xE0 || s > 0xF0))
+                {
+                    //return Encoding.GetEncoding("GB18030");
+                    try
+                    {
+                        return Encoding.GetEncoding("GB18030");
+                    }
+                    catch
+                    {
+                        return Encoding.GetEncoding("GB2312");
+                    }
+                }
+                return new UTF8Encoding(false);
+            } while (true);
         }
 
         public static void WriteFileHeader(FileStream fs, Encoding encoding)
@@ -334,18 +364,6 @@ namespace Studyzy.IMEWLConverter.Helpers
                 result.AddRange(GetFilesPathFor1(path.Trim()));
             }
             return result;
-        }
-        /// <summary>
-        /// 获取文件大小
-        /// </summary>
-        /// <param name="sFullName"></param>
-        /// <returns></returns>
-        public static long GetFileSize(string sFullName)
-        {
-            long lSize = 0;
-            if (File.Exists(sFullName))
-                lSize = new FileInfo(sFullName).Length;
-            return lSize;
         }
 
         /// <summary>

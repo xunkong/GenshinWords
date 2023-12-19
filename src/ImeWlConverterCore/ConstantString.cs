@@ -1,21 +1,4 @@
-﻿/*
- *   Copyright © 2009-2020 studyzy(深蓝,曾毅)
-
- *   This program "IME WL Converter(深蓝词库转换)" is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
-
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
-
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-
+﻿
 using System.Windows;
 
 namespace Studyzy.IMEWLConverter
@@ -38,7 +21,6 @@ namespace Studyzy.IMEWLConverter
         public const string SOUGOU_PINYIN_BIN = "搜狗拼音备份词库bin";
         public const string WUBI86 = "五笔86版";
         public const string WUBI98 = "五笔98版";
-        public const string WUBI_NEWAGE = "五笔新世纪版";
         public const string QQ_PINYIN = "QQ拼音";
         public const string LIBPINYIN = "libpinyin";
         public const string QQ_PINYIN_QPYD = "QQ分类词库qpyd";
@@ -56,7 +38,6 @@ namespace Studyzy.IMEWLConverter
         public const string IFLY_IME = "讯飞输入法";
         public const string JIDIAN = "极点五笔";
         public const string JIDIAN_ZHENGMA = "极点郑码";
-        public const string JIDIAN_MBDICT = "极点五笔.mb文件";
         public const string XIAOYA_WUBI = "小鸭五笔";
         public const string MS_PINYIN = "微软拼音";
         public const string WIN10_MS_PINYIN = "Win10微软拼音（自定义短语）";
@@ -88,7 +69,6 @@ namespace Studyzy.IMEWLConverter
         public const string SOUGOU_PINYIN_BIN_C = "sgpybin";
         public const string WUBI86_C = "wb86";
         public const string WUBI98_C = "wb98";
-        public const string WUBI_NEWAGE_C = "wbnewage";
         public const string QQ_PINYIN_C = "qqpy";
         public const string QQ_PINYIN_QPYD_C = "qpyd";
         public const string QQ_PINYIN_QCEL_C = "qcel";
@@ -102,7 +82,6 @@ namespace Studyzy.IMEWLConverter
         public const string SINA_PINYIN_C = "xlpy";
         public const string SELF_DEFINING_C = "self";
         public const string JIDIAN_C = "jd";
-        public const string JIDIAN_MBDICT_C = "jdmb";
         public const string IFLY_IME_C = "ifly";
         public const string MS_PINYIN_C = "mspy";
         public const string WIN10_MS_PINYIN_C = "win10mspy";

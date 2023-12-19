@@ -1,21 +1,4 @@
-﻿/*
- *   Copyright © 2009-2020 studyzy(深蓝,曾毅)
-
- *   This program "IME WL Converter(深蓝词库转换)" is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
-
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
-
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -41,7 +24,6 @@ namespace Studyzy.IMEWLConverter.IME
         #endregion
 
         private Dictionary<int, string> pyDic = new Dictionary<int, string>();
-        private static char[] a2zchar => "abcdefghijklmnopqrstuvwxyz".ToCharArray();
 
         #region IWordLibraryImport Members
 
@@ -56,10 +38,7 @@ namespace Studyzy.IMEWLConverter.IME
         {
             throw new Exception("Qcel格式是二进制文件，不支持流转换");
         }
-        public static Dictionary<string, string> ReadQcelInfo(string path)
-        {
-            return SougouPinyinScel.ReadScelInfo(path);
-        }
+
         private WordLibraryList ReadQcel(string path)
         {
             pyDic = new Dictionary<int, string>();
@@ -92,6 +71,22 @@ namespace Studyzy.IMEWLConverter.IME
             CountWord = BinFileHelper.ReadInt32(fs);
             CurrentStatus = 0;
 
+            //fs.Position = 0x130;
+            //fs.Read(str, 0, 64);
+            //string txt = Encoding.Unicode.GetString(str);
+            ////Console.WriteLine("字库名称:" + txt);
+            //fs.Position = 0x338;
+            //fs.Read(str, 0, 64);
+            ////Console.WriteLine("字库类别:" + Encoding.Unicode.GetString(str));
+
+            //fs.Position = 0x540;
+            //fs.Read(str, 0, 64);
+            ////Console.WriteLine("字库信息:" + Encoding.Unicode.GetString(str));
+
+            //fs.Position = 0xd40;
+            //fs.Read(str, 0, 64);
+            ////Console.WriteLine("字库示例:" + Encoding.Unicode.GetString(str));
+
             fs.Position = 0x1540;
             str = new byte[4];
             fs.Read(str, 0, 4); //\x9D\x01\x00\x00
@@ -107,7 +102,6 @@ namespace Studyzy.IMEWLConverter.IME
                 pyDic.Add(mark, py);
                 if (py == "zuo") //最后一个拼音
                 {
-                    Debug.WriteLine(fs.Position);
                     break;
                 }
             }
@@ -119,23 +113,20 @@ namespace Studyzy.IMEWLConverter.IME
             Debug.WriteLine(s.ToString());
 
 
-            //fs.Position = 0x2628;
+            fs.Position = 0x2628;
             //fs.Position = hzPosition;
 
             while (true)
             {
                 try
                 {
-                    var data = ReadAPinyinWord(fs);
-                    if (data is null) break;
-                    
-                    pyAndWord.AddRange(data);
+                    pyAndWord.AddRange(ReadAPinyinWord(fs));
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    Debug.WriteLine(ex.Message);
                 }
-                if (CurrentStatus == CountWord || fs.Length == fs.Position) //判断文件结束
+                if (fs.Length == fs.Position) //判断文件结束
                 {
                     fs.Close();
                     break;
@@ -166,12 +157,7 @@ namespace Studyzy.IMEWLConverter.IME
             for (int i = 0; i < pinyinLen / 2; i++)
             {
                 int key = str[i * 2] + str[i * 2 + 1] * 256;
-                //Debug.Assert(key < pyDic.Count);
-                if(key < pyDic.Count)
-                    wordPY.Add(pyDic[key]);
-                else
-                    wordPY.Add(a2zchar[key - pyDic.Count].ToString());
-                    //return null; // 用于调试，忽略编码异常的记录，不中止运行
+                wordPY.Add(pyDic[key]);
             }
             //wordPY = wordPY.Remove(wordPY.Length - 1); //移除最后一个单引号
             //接下来读词语

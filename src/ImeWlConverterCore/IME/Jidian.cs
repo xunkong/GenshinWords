@@ -1,21 +1,4 @@
-﻿/*
- *   Copyright © 2009-2020 studyzy(深蓝,曾毅)
-
- *   This program "IME WL Converter(深蓝词库转换)" is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
-
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
-
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Studyzy.IMEWLConverter.Entities;
@@ -73,20 +56,23 @@ namespace Studyzy.IMEWLConverter.IME
 
         #region IWordLibraryExport 成员
 
-       public virtual string ExportLine(WordLibrary wl)
-        {
-            throw new NotImplementedException("极点输入法词库不支持流转换");
-        }
+       
 
-        public string ExportLine(string code,WordLibraryList wll)
+        public virtual string ExportLine(WordLibrary wl)
         {
             var sb = new StringBuilder();
-            sb.Append(code);
-            foreach (var wl in wll)
-            {
-                sb.Append(" ");
-                sb.Append(wl.Word);
-            }
+            //if (string.IsNullOrEmpty(wl.WubiCode))
+            //{
+            //    sb.Append(wubiFactory.GetCodeOfString(wl.Word)[0]);
+            //}
+            //else
+            //{
+            //    sb.Append(wl.WubiCode);
+            //}
+            sb.Append(wl.SingleCode);
+            sb.Append(" ");
+            sb.Append(wl.Word);
+
             return sb.ToString();
         }
 
@@ -94,23 +80,9 @@ namespace Studyzy.IMEWLConverter.IME
         public IList<string> Export(WordLibraryList wlList)
         {
             var sb = new StringBuilder();
-            var dict = new Dictionary<string, WordLibraryList>();
             for (int i = 0; i < wlList.Count; i++)
             {
-                var wl = wlList[i];
-                if(dict.ContainsKey(wl.SingleCode))
-                {
-                    dict[wl.SingleCode].Add(wl);
-                }
-                else
-                {
-                    dict.Add(wl.SingleCode, new WordLibraryList { wl});
-                }
-            }
-            foreach(var key in dict.Keys)
-            {
-
-                sb.Append(ExportLine(key,dict[key]));
+                sb.Append(ExportLine(wlList[i]));
                 sb.Append("\r\n");
             }
             return new List<string>() { sb.ToString() };

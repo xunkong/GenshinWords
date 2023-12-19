@@ -67,7 +67,8 @@ foreach (var export in exports)
         var str = mainBody.Convert(new List<string> { temp });
         if (fileName.Contains("Gboard") || fileName.Contains("Win10"))
         {
-            File.Move(str.Trim(), Path.Join(output, Path.GetFileName(str.Trim())), true);
+            string place = str.Replace("词库文件在：", "").Trim();
+            File.Move(place, Path.Join(output, Path.GetFileName(place.Trim())), true);
         }
         else
         {

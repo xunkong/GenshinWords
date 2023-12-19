@@ -1,21 +1,4 @@
-﻿/*
- *   Copyright © 2009-2020 studyzy(深蓝,曾毅)
-
- *   This program "IME WL Converter(深蓝词库转换)" is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
-
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
-
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -48,10 +31,6 @@ namespace Studyzy.IMEWLConverter.IME
         {
             var pyAndWord = new WordLibraryList();
             var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            fs.Position = 0x02;
-            int enc = fs.ReadByte();
-            Encoding encoding = (enc == 0x09) ? Encoding.Unicode : Encoding.GetEncoding("GB18030");
-            
             fs.Position = 0x44;
             CountWord = BinFileHelper.ReadInt32(fs);
             int segmentCount = BinFileHelper.ReadInt32(fs); //分为几段
@@ -61,7 +40,7 @@ namespace Studyzy.IMEWLConverter.IME
                 try
                 {
                     fs.Position = 0xC00 + 1024*i;
-                    var segment = new Segment(fs, encoding);
+                    var segment = new Segment(fs);
                     pyAndWord.AddWordLibraryList(segment.WordLibraryList);
                     CurrentStatus += segment.WordLibraryList.Count;
                 }
@@ -77,7 +56,7 @@ namespace Studyzy.IMEWLConverter.IME
 
         public WordLibraryList ImportLine(string line)
         {
-            throw new NotImplementedException("华宇紫光uwl文件为二进制文件，不支持");
+            throw new NotImplementedException("搜狗Bin文件为二进制文件，不支持");
         }
     }
 
@@ -219,12 +198,11 @@ namespace Studyzy.IMEWLConverter.IME
 
         #endregion
 
-        //private readonly IList<byte> LenDic = new List<byte>
-        //{0x05, 0x87, 0x09, 0x8B, 0x0D, 0x8F, 0x11, 0x13, 0x15, 0x17, 0x19};
+        private readonly IList<byte> LenDic = new List<byte>
+        {0x05, 0x87, 0x09, 0x8B, 0x0D, 0x8F, 0x11, 0x13, 0x15, 0x17, 0x19};
 
-        public Segment(Stream stream,Encoding encoding)
+        public Segment(Stream stream)
         {
-            UwlEncoding = encoding;
             IndexNumber = BinFileHelper.ReadInt32(stream);
             int ff = BinFileHelper.ReadInt32(stream);
             WordLenEnums = BinFileHelper.ReadInt32(stream);
@@ -249,7 +227,6 @@ namespace Studyzy.IMEWLConverter.IME
         //FF
         public int WordLenEnums { get; set; }
         public int WordByteLen { get; set; }
-        public Encoding UwlEncoding { get; set; }
 
         public WordLibraryList WordLibraryList { get; set; }
 
@@ -260,19 +237,20 @@ namespace Studyzy.IMEWLConverter.IME
                 Debug.WriteLine("Debug");
             }
             var wl = new WordLibrary();
-            int lenWord = stream.ReadByte();
             int lenCode = stream.ReadByte();
-            lenCode = lenCode%0x10*2 + lenWord/0x80;
-            lenWord = lenWord%0x80 -1;
-            lenByte = 4 + lenWord + lenCode*2;
-
-            wl.Rank += stream.ReadByte();
-            wl.Rank += stream.ReadByte()<<8;
-
+            int len = LenDic.IndexOf((byte) lenCode) + 2;
+            lenByte = len*4 + 4;
+            var rankB = new byte[4];
+            for (int i = 0; i < 3; i++)
+            {
+                var b = (byte) stream.ReadByte();
+                rankB[i] = b;
+            }
+            wl.Rank = (BitConverter.ToInt32(rankB, 0) - 1)/32;
             //py
-            //int pyLen = Math.Min(8, len); //拼音最大支持8个字的拼音
-            var wlPinYin = new string[lenCode];
-            for (int i = 0; i < lenCode; i++)
+            int pyLen = Math.Min(8, len); //拼音最大支持8个字的拼音
+            var wlPinYin = new string[pyLen];
+            for (int i = 0; i < pyLen; i++)
             {
                 int smB = stream.ReadByte();
                 int ymB = stream.ReadByte();
@@ -297,9 +275,9 @@ namespace Studyzy.IMEWLConverter.IME
             }
             wl.PinYin = wlPinYin;
             //hz
-            var hzB = new byte[lenWord];
-            stream.Read(hzB, 0, lenWord);
-            wl.Word = UwlEncoding.GetString(hzB);
+            var hzB = new byte[len*2];
+            stream.Read(hzB, 0, len*2);
+            wl.Word = Encoding.Unicode.GetString(hzB);
 
             return wl;
         }

@@ -1,21 +1,4 @@
-﻿/*
- *   Copyright © 2009-2020 studyzy(深蓝,曾毅)
-
- *   This program "IME WL Converter(深蓝词库转换)" is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
-
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
-
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -71,39 +54,7 @@ namespace Studyzy.IMEWLConverter.IME
         {
             throw new Exception("Scel格式是二进制文件，不支持流转换");
         }
-        public static Dictionary<string, string> ReadScelInfo(string path)
-        {
-            Dictionary<string, string> info = new Dictionary<string, string>();
-            var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
 
-            fs.Position = 0x124;
-            var CountWord = BinFileHelper.ReadInt32(fs);
-            info.Add("CountWord", CountWord.ToString());
-
-            info.Add("Name", readScelFieldText(fs, 0x130));
-            info.Add("Type", readScelFieldText(fs, 0x338));
-            info.Add("Info", readScelFieldText(fs, 0x540,1024));
-            info.Add("Sample", readScelFieldText(fs, 0xd40, 1024));
-
-            fs.Close();
-            return info;
-        }
-        private static string readScelFieldText(FileStream fs, long seek, int length = 64)
-        {
-            long oldSeek = fs.Position;
-            if (seek > fs.Length)
-                throw new ArgumentException("地址超过文件长度");
-            fs.Seek(seek, SeekOrigin.Begin);
-            var bytes = new byte[length];
-            fs.Read(bytes, 0, length);
-            string value = Encoding.Unicode.GetString(bytes);
-            int end = value.IndexOf('\0');
-            if (end < 0)
-                throw new ArgumentException("未找到\\0，可能索求长度不足");
-            string text = value.Substring(0, end);
-            fs.Position = oldSeek;
-            return text;
-        }
         private WordLibraryList ReadScel(string path)
         {
             pyDic = new Dictionary<int, string>();
@@ -113,6 +64,13 @@ namespace Studyzy.IMEWLConverter.IME
             var str = new byte[128];
             var outstr = new byte[128];
             byte[] num;
+            //以下代码调试用的
+            //fs.Position = 0x2628;
+            //byte[] debug = new byte[50000];
+            //fs.Read(debug, 0, 50000);
+            //string txt = Encoding.Unicode.GetString(debug);
+
+            //调试用代码结束
 
             int hzPosition = 0;
             fs.Read(str, 0, 128); //\x40\x15\x00\x00\x44\x43\x53\x01
@@ -128,6 +86,22 @@ namespace Studyzy.IMEWLConverter.IME
             fs.Position = 0x124;
             CountWord = BinFileHelper.ReadInt32(fs);
             CurrentStatus = 0;
+
+            //fs.Position = 0x130;
+            //fs.Read(str, 0, 64);
+            //string txt = Encoding.Unicode.GetString(str);
+            ////Console.WriteLine("字库名称:" + txt);
+            //fs.Position = 0x338;
+            //fs.Read(str, 0, 64);
+            ////Console.WriteLine("字库类别:" + Encoding.Unicode.GetString(str));
+
+            //fs.Position = 0x540;
+            //fs.Read(str, 0, 64);
+            ////Console.WriteLine("字库信息:" + Encoding.Unicode.GetString(str));
+
+            //fs.Position = 0xd40;
+            //fs.Read(str, 0, 64);
+            ////Console.WriteLine("字库示例:" + Encoding.Unicode.GetString(str));
 
             fs.Position = 0x1540;
             str = new byte[4];
@@ -168,7 +142,7 @@ namespace Studyzy.IMEWLConverter.IME
                 {
                     Debug.WriteLine(ex.Message);
                 }
-                if (CurrentStatus == CountWord || fs.Length == fs.Position) //判断文件结束
+                if (fs.Length == fs.Position) //判断文件结束
                 {
                     fs.Close();
                     break;
